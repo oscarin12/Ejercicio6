@@ -1,0 +1,134 @@
+<!-- Descripción del Ejercicio: Solicitud AJAX y Manejo de Datos Potencialmente Undefined
+
+Este ejercicio se centra en realizar una solicitud AJAX utilizando JavaScript para obtener datos de una API pública. Actualmente no esta mostrando información del usuario a consultar. Una vez solucionado el problema de busqueda, asegurarse que se esten trayendo los datos correctos a mostrar y no mostrar campos undefined -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplo de solicitud AJAX con estilo y entrada de usuario (Fetch)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #githubLogo {
+            margin-bottom: 20px;
+            width: 100px; /* Tamaño de la imagen */
+            height: auto; /* Ajuste automático de la altura */
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #userInfo {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        #userInfo h3 {
+            color: #333;
+        }
+
+        #userInfo p {
+            margin: 5px 0;
+        }
+
+        #userInfo strong {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            width: calc(100% - 40px);
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <h1>Información de usuario de GitHub</h1>
+        <img id="githubLogo" src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" alt="GitHub Logo">
+        <input type="text" id="username" placeholder="Nombre de usuario de GitHub">
+        <button onclick="getUserInfo()">Obtener información de usuario</button>
+        <div id="userInfo"></div>
+    </div>
+
+    <script>
+        function getUserInfo() {
+            var username = document.getElementById('username').value.trim();
+          
+         
+            
+            if (!username) {
+                alert('Por favor, ingresa un nombre de usuario de GitHub.');
+                return;
+            }
+
+            var apiUrl = 'https://api.github.com/users/' + username;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('No se pudo obtener la información del usuario.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    
+                    var userInfo = `
+                        <h3>${data.name}</h3>
+                        <p><strong>Nombre de usuario:</strong> ${data.login}</p>
+                        <p><strong>Ubicación:</strong> ${data.location}</p> 
+                        <p><strong>Seguidores:</strong> ${data.followers}</p>
+                        <p><strong>Repositorios públicos:</strong> ${data.public_repos}</p>
+                    `;
+                    document.getElementById('userInfo').innerHTML = userInfo;
+                })
+                .catch(error => {
+                    console.error('Error al obtener la información:', error);
+                    document.getElementById('userInfo').innerHTML = '<p>Ocurrió un error al obtener la información del usuario.</p>';
+                });
+        }
+        //unos de los errores que tenia fue el document.getElementById('username') le faltaba .value.trim.() 
+        //igual otro error fue  en la ubicacion y repositorio publico no estaban llamando bien  a los objetos de data en este caso  eran ubicacion y repositorios
+    </script>
+</body>
+</html>
